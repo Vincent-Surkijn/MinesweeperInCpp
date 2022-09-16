@@ -1,42 +1,76 @@
 #pragma once
 
+//#define DEBUG
+
 #include <iostream>
 #include <vector>
 #include "Random.h"
+#include "Coord.h"
+#include "Tile.h"
 
 
-enum class Level
-{
+// Enum to define difficulty level
+enum class Level{
 	EASY,
 	NORMAL,
 	HARD
 };
 
-struct coord
-{
-	int x{0};
-	int y{0};
-};
 
 
+// Grid class definition
 class Grid{
 private:
-	Level difficulty = Level::EASY;
+	Level difficulty;
 	std::vector<coord> mineCoords;
+	std::vector<std::vector<Tile*>>	field;
 
 public:
+	// Constructors
 	Grid() {
-		for (int i = 0; i < 10; ++i) {
-			coord c;
-			do {
-				c = coord{ randInt(0,9), randInt(0,9) };
-				mineCoords[i] = c;
-			} while (not std::count_if(mineCoords.begin(), mineCoords.end(), &c));
-		}
+		// Default level = easy
+		difficulty = Level::EASY;
+		// Generate mine coordinates
+		generateMineCoords();
+		// Populate field with tiles
+		populateField();
 	}
 
+	Grid(Level difficulty) :difficulty{ difficulty } {
+		// Set difficulty level
+		this->difficulty = difficulty;
+	#ifdef DEBUG
+		std::cout << "Grid difficulty:" << static_cast<int>(this->difficulty) << "\n";
+	#endif
+		// Generate mine coordinates
+		generateMineCoords();
+		// Populate field with tiles
+		populateField();
+	}
+
+	// Destructor
+	~Grid() {
+		int dims[2];
+		// Store grid size in dims variable
+		getGridSize(dims);
+		// Clear all Tile ptrs
+		for (int c = 0; c < dims[0]; ++c) {	// Loop through rows
+			for (int r = 0; r < dims[1]; ++r) {
+				delete(field[r][c]);
+			}
+			// Start a new line for the new row
+			std::cout << "\n";
+		}
+		field.clear();
+	}
+
+	// Getters
 	Level getDifficulty() {
 		return difficulty;
+	}
+
+	std::vector<coord> getMineCoords() {
+		return mineCoords;
 	}
 
 	int getNumberOfMines() {
@@ -57,5 +91,44 @@ public:
 		}
 	}
 
+	// Return grid size as an array[rows,columns] in the passed parameter
+	void getGridSize(int *result) {
+		switch (difficulty)
+		{
+		case Level::EASY:
+			// Rows
+			result[0] = 8;
+			// Columns
+			result[1] = 8;
+			break;
+		case Level::NORMAL:
+			// Rows
+			result[0] = 16;
+			// Columns
+			result[1] = 16;
+			break;
+		case Level::HARD:
+			// Rows
+			result[0] = 30;
+			// Columns
+			result[1] = 16;
+			break;
+		default:
+			throw "Invalid Level Enum state @Grid.h:getNumberOfMines()";
+			break;
+		}
+	#ifdef DEBUG
+		std::cout << "Returning size:" << result[0] << "," << result[1] << "\n";
+	#endif
+	}
+
+
+	// Other functions
+	void generateMineCoords();
+
+	void populateField();
+
 	void print();
+
+	bool coordIsMine(coord c);
 };

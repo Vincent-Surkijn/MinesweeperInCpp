@@ -1,19 +1,4 @@
 ﻿  Grid.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\algorithm(476,13): error C2064: term does not evaluate to a function taking 1 arguments
-C:\Users\Vincent Surkijn\Documents\Onboarding\Tutorials\Cpp_Tutorials\Code\MinesweeperInCpp\MinesweeperInCpp\Grid.h(34): message : see reference to function template instantiation '__int64 std::count_if<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,coord*>(_InIt,_InIt,_Pr)' being compiled
-          with
-          [
-              _Ty=coord,
-              _InIt=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<coord>>>,
-              _Pr=coord *
-          ]
   MinesweeperInCpp.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\algorithm(476,13): error C2064: term does not evaluate to a function taking 1 arguments
-C:\Users\Vincent Surkijn\Documents\Onboarding\Tutorials\Cpp_Tutorials\Code\MinesweeperInCpp\MinesweeperInCpp\Grid.h(34): message : see reference to function template instantiation '__int64 std::count_if<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,coord*>(_InIt,_InIt,_Pr)' being compiled
-          with
-          [
-              _Ty=coord,
-              _InIt=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<coord>>>,
-              _Pr=coord *
-          ]
   Generating Code...
+  MinesweeperInCpp.vcxproj -> C:\Users\Vincent Surkijn\Documents\Onboarding\Tutorials\Cpp_Tutorials\Code\MinesweeperInCpp\MinesweeperInCpp\x64\Debug\MinesweeperInCpp.exe
