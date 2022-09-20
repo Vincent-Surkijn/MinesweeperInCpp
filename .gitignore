@@ -1,4 +1,4 @@
-.vs/
-x64/
+MinesweeperInCpp/.vs/
+^MinesweeperInCpp/x64/
 *.sln
 *.vcxproj*
