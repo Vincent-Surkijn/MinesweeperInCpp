@@ -1,4 +1,4 @@
 MinesweeperInCpp/.vs/
-^MinesweeperInCpp/x64/
+MinesweeperInCpp/x64/
 *.sln
 *.vcxproj*
