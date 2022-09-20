@@ -10,6 +10,10 @@ void Tile::setFlagged(bool flagged) {
 	this->flagged = flagged;
 }
 
+void Tile::setNeighboringMines(int neighboringMines) {
+	this->neighboringMines = neighboringMines;
+}
+
 // Other functions
 void Tile::print() {
 	if (clicked) {

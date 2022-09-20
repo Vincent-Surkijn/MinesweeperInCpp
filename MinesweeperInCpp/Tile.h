@@ -25,6 +25,11 @@ public:
 		neighboringMines = 0;
 	}
 
+	Tile(coord c, int neighboringMines) : c{ c }, neighboringMines{ neighboringMines } {
+		flagged = false;
+		clicked = false;
+	}
+
 	// Getters
 	bool getClicked() {
 		return clicked;
@@ -47,9 +52,14 @@ public:
 
 	void setFlagged(bool flagged);
 
+	void setNeighboringMines(int neighboringMines);
+
 	// Other functions
 	virtual void print();
 
+	virtual bool isMine() {
+		return false;
+	}
 };
 
 
@@ -65,4 +75,8 @@ public:
 
 	// Other functions
 	void print();
+
+	virtual bool isMine() {
+		return true;
+	}
 };

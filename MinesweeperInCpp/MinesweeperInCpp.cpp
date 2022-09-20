@@ -5,12 +5,29 @@
 int main()
 {
     std::cout << "Welcome to this C++ minesweeper!\n";
-    Grid g = Grid(Level::HARD);
+    std::cout << "Pick a level: Easy (0)\n";
+    std::cout << "              Medium (1)\n";
+    std::cout << "              Hard (2)\n";
+
+    int level = 0;
+    do {
+        std::cout << "Enter the level:";
+        std::cin >> level;
+    } while (level < 0 || level >= static_cast<int>(Level::MAX));
+
+    Grid g = Grid(static_cast<Level>(level));
 
     std::cout << "Grid print:\n";
     g.print();
 
+    coord c = g.getMineCoords()[1];
+    ++c.x;
+    std::cout << g.countNeighboringMines(c);
+        
+
     /*
+
+
     int dims[2];
     g.getGridSize(dims);
     std::cout << "Grid dims:" << dims[0] << "," << dims[1] << "\n";

@@ -1,6 +1,6 @@
 #pragma once
 
-//#define DEBUG
+#define DEBUG
 
 #include <iostream>
 #include <vector>
@@ -13,7 +13,8 @@
 enum class Level{
 	EASY,
 	NORMAL,
-	HARD
+	HARD,
+	MAX
 };
 
 
@@ -122,6 +123,9 @@ public:
 	#endif
 	}
 
+	Tile* getTileAtCoord(coord c) {
+		return field[c.x][c.y];
+	}
 
 	// Other functions
 	void generateMineCoords();
@@ -131,4 +135,6 @@ public:
 	void print();
 
 	bool coordIsMine(coord c);
+
+	int countNeighboringMines(coord c);
 };
