@@ -1,5 +1,9 @@
+#ifndef TILE_H
+#define TILE_H
+
+
 #include <iostream>
-#include "Coord.h"
+#include "Structs.h"
 
 
 // Tile class definition
@@ -80,3 +84,5 @@ public:
 		return true;
 	}
 };
+
+#endif // TILE_H

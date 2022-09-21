@@ -1,18 +1,14 @@
 #include "Grid.h"
 
-bool operator==(coord& c1, coord& c2) {
-	return c1.x == c2.x && c1.y == c2.y;
-}
-
 void Grid::generateMineCoords() {
-	// Retrieve dimensions for this level
+	// Retrieve dimensions ([row,column]) for this level
 	int dims[2];
 	this->getGridSize(dims);
 	// Generate unique mine coordinates
 	for (int i = 0; i < this->getNumberOfMines(); ++i) {
 		coord c;
 		do {
-			c = coord{ randInt(0,dims[0] - 1), randInt(0,dims[0] - 1) };
+			c = coord{ randInt(0,dims[0] - 1), randInt(0,dims[1] - 1) };
 		} while (this->coordIsMine(c));
 		mineCoords.push_back(c);
 	}
@@ -22,17 +18,17 @@ void Grid::populateField() {
 	// Retrieve dimensions for this level
 	int dims[2];
 	this->getGridSize(dims);
-	for (int c = 0; c < dims[1]; ++c) {	// Loop through columns
+	for (int r = 0; r < dims[0]; ++r) {	// Loop through rows
 		// Initialize temp vector
 		std::vector<Tile*> v;
-		for (int r = 0; r < dims[0]; ++r) {	// Loop through rows
+		for (int c = 0; c < dims[1]; ++c) {	// Loop through columns
 			// Check if it should be a normal Tile or a Mine
 			if (this->coordIsMine(coord{ r, c })) {
 				Mine m = Mine(coord{ r, c });
 				Mine* mPtr = new(Mine);
 				*mPtr = m;
 #ifdef DEBUG
-				(*mPtr).setClicked(true);
+				//(*mPtr).setClicked(true);
 				v.push_back(mPtr);
 				std::cout << "Added mine at:" << r << "," << c << "\n";
 				continue;
@@ -45,7 +41,7 @@ void Grid::populateField() {
 				Tile* tPtr = new(Tile);
 				*tPtr = t;
 #ifdef DEBUG
-				(*tPtr).setClicked(true);
+				//(*tPtr).setClicked(true);
 				v.push_back(tPtr);
 				continue;
 #endif
@@ -62,7 +58,7 @@ void Grid::print(){
 #ifdef DEBUG
 	std::cout << "Grid with mines at:";
 	for (int i = 0; i < mineCoords.size(); ++i) {
-		std::cout << mineCoords[i].x << "," << mineCoords[i].y << ";";
+		std::cout << mineCoords[i] << ";";
 	}
 	std::cout << "\n";
 #endif
@@ -71,28 +67,28 @@ void Grid::print(){
 	getGridSize(dims);
 	// Print grid field
 	// Loop through rows
-	for (int c = 0; c < dims[0] + 1; ++c) {
+	for (int r = 0; r < dims[0] + 1; ++r) {
 		// Print row numbers in correct format
-		if (c == 0) {
+		if (r == 0) {
 			std::cout << "  ";
 		}
-		else if (c - 1 < 10) {
-			std::cout << c - 1 << " ";
+		else if (r - 1 < 10) {
+			std::cout << r - 1 << " ";
 		}
 		else {
-			std::cout << c - 1;
+			std::cout << r - 1;
 		}
 		// Loop through columns
-		for (int r = 0; r < dims[1]; ++r) {
+		for (int c = 0; c < dims[1]; ++c) {
 			// Print column numbers
-			if (c == 0) {
-				std::cout << " " << r;
+			if (r == 0) {
+				std::cout << " " << c;
 				// Print an extra space for numbers under 10
-				if (r < 10) std::cout << " ";
+				if (c < 10) std::cout << " ";
 				continue;
 			}
 			// Print tiles
-			Tile* t = field[r][c-1];
+			Tile* t = field[r-1][c];
 			(*t).print();
 		}
 		// Start a new line for the new row
@@ -108,19 +104,19 @@ bool Grid::coordIsMine(coord c){
 }
 
 int Grid::countNeighboringMines(coord c) {
-	// Get x and y coordinate
-	int x = c.x;
-	int y = c.y;
+	// Get row and column number
+	int row = c.row;
+	int col = c.col;
 	// Store coordinates of all neighbors
 	coord neighbors[8]{
-		coord{x-1, y-1},
-		coord{x-1, y},
-		coord{x-1, y-1},
-		coord{x, y-1},
-		coord{x+1,y-1},
-		coord{x+1,y},
-		coord{x+1,y+1},
-		coord{x,y+1}
+		coord{row-1, col-1},
+		coord{row-1, col},
+		coord{row-1, col-1},
+		coord{row, col-1},
+		coord{row+1,col-1},
+		coord{row+1,col},
+		coord{row+1,col+1},
+		coord{row,col+1}
 	};
 	// Count how many neighbors are mines
 	int count = 0;
@@ -131,4 +127,48 @@ int Grid::countNeighboringMines(coord c) {
 	}
 	// Return count
 	return count;
+}
+
+// TODO: continue working on this function
+int Grid::receiveUserInput(UserInput input) {
+	// First check which action was inputted
+	if (input.act == 'f') {	// Action = flagging
+		// Check if maximum amount of flags (= amount of mines) has been reached
+		if (flagsSet == this->getNumberOfMines()) {
+			std::cout << "Maximum amount of flags has been reached!\n";
+			// Game continues
+			return 0;
+		}
+		// Retrieve selected Tile
+		Tile* t = this->getTileAtCoord(input.c);
+		// Check its previous flagged state
+		if (t->getFlagged()) {	// Was already flagged
+			// Update state
+			t->setFlagged(false);
+			// Decrement counter
+			--this->flagsSet;
+		}
+		else {
+			// Update state
+			t->setFlagged(true);
+			// Increment counter
+			++this->flagsSet;
+		}
+		// Game continues
+		return 0;
+	}
+	else {	// Action = clicking
+		// Retrieve selected Tile
+		Tile* t = this->getTileAtCoord(input.c);
+		// Check its previous state
+		if (t->getClicked()) {	// Was already clicked
+			std::cout << "Tile at " << input.c << " was already clicked!\n";
+			// Game continues
+			return 0;
+		}
+		if (t->isMine()) {	// Clicked a mine
+			// Game is lost
+			return 2;
+		}
+	}
 }

@@ -1,2 +1,3 @@
-﻿  MinesweeperInCpp.cpp
+﻿  Grid.cpp
+C:\Users\Vincent Surkijn\Documents\Onboarding\Tutorials\Cpp_Tutorials\Code\MinesweeperInCpp\MinesweeperInCpp\Grid.cpp(173): warning C4715: 'Grid::receiveUserInput': not all control paths return a value
   MinesweeperInCpp.vcxproj -> C:\Users\Vincent Surkijn\Documents\Onboarding\Tutorials\Cpp_Tutorials\Code\MinesweeperInCpp\MinesweeperInCpp\x64\Debug\MinesweeperInCpp.exe

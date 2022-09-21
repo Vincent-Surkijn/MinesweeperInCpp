@@ -1,11 +1,12 @@
-#pragma once
+#ifndef GRID_H
+#define GRID_H
+
 
 #define DEBUG
 
 #include <iostream>
 #include <vector>
 #include "Random.h"
-#include "Coord.h"
 #include "Tile.h"
 
 
@@ -22,9 +23,11 @@ enum class Level{
 // Grid class definition
 class Grid{
 private:
-	Level difficulty;
-	std::vector<coord> mineCoords;
-	std::vector<std::vector<Tile*>>	field;
+	int flagsSet = 0;	// Amount of flags already set
+	int clicks = 0;		// Amount of clicks done by user
+	Level difficulty;	// Difficulty level of the game
+	std::vector<coord> mineCoords;			// Vector with coordinates of the mines
+	std::vector<std::vector<Tile*>>	field;	// Vector with all the tiles including mines
 
 public:
 	// Constructors
@@ -124,7 +127,7 @@ public:
 	}
 
 	Tile* getTileAtCoord(coord c) {
-		return field[c.x][c.y];
+		return field[c.row][c.col];
 	}
 
 	// Other functions
@@ -137,4 +140,13 @@ public:
 	bool coordIsMine(coord c);
 
 	int countNeighboringMines(coord c);
+
+	/* Receives input from userand acts upon it
+	 * Returns 0 if game continues
+	 * Returns 1 if game is won
+	 * Returns 2 if game is lost
+	 */ 
+	int receiveUserInput(UserInput input);
 };
+
+#endif // GRID_H
