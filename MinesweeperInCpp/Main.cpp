@@ -29,8 +29,16 @@ int main()
     // Init loop var
     int res{ 0 };
     do {
+#ifndef DEBUG
         // Print the field
         g.print();
+#endif // !DEBUG
+#ifdef DEBUG
+        // Print the field
+        g.print(true);
+#endif // DEBUG
+
+
 
         // Retrieve user input
         UserInput input = getInput(g);

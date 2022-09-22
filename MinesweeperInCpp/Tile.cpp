@@ -15,8 +15,8 @@ void Tile::setNeighboringMines(int neighboringMines) {
 }
 
 // Other functions
-void Tile::print() {
-	if (clicked) {
+void Tile::print(bool clicked) {
+	if (this->clicked || clicked) {
 		std::cout << "|" << this->neighboringMines << "|";
 	}
 	else if (flagged) {

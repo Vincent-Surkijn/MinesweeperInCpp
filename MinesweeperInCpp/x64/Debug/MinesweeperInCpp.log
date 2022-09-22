@@ -1,5 +1,5 @@
 ﻿  Grid.cpp
   Main.cpp
   Generating Code...
-C:\Users\Vincent Surkijn\Documents\Onboarding\Tutorials\Cpp_Tutorials\Code\MinesweeperInCpp\MinesweeperInCpp\Grid.h(138): warning C4172: returning address of local variable or temporary: t
+C:\Users\Vincent Surkijn\Documents\Onboarding\Tutorials\Cpp_Tutorials\Code\MinesweeperInCpp\MinesweeperInCpp\Grid.h(140): warning C4172: returning address of local variable or temporary: t
   MinesweeperInCpp.vcxproj -> C:\Users\Vincent Surkijn\Documents\Onboarding\Tutorials\Cpp_Tutorials\Code\MinesweeperInCpp\MinesweeperInCpp\x64\Debug\MinesweeperInCpp.exe

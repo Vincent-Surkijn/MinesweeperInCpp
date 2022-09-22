@@ -59,7 +59,7 @@ public:
 	void setNeighboringMines(int neighboringMines);
 
 	// Other functions
-	virtual void print();
+	virtual void print(bool clicked = false);
 
 	virtual bool isMine() {
 		return false;
@@ -78,7 +78,7 @@ public:
 	Mine(coord c) : Tile(c) {}
 
 	// Other functions
-	void print();
+	void print(bool clicked = false);
 
 	bool isMine() {
 		return true;

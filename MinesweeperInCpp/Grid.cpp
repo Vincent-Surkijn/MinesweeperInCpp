@@ -30,7 +30,6 @@ void Grid::populateField() {
 				Mine* mPtr = new(Mine);
 				*mPtr = m;
 #ifdef DEBUG
-				//(*mPtr).setClicked(true);
 				v.push_back(mPtr);
 				std::cout << "Added mine at:" << r << "," << c << "\n";
 				continue;
@@ -45,7 +44,6 @@ void Grid::populateField() {
 				Tile* tPtr = new(Tile);
 				*tPtr = t;
 #ifdef DEBUG
-				//(*tPtr).setClicked(true);
 				v.push_back(tPtr);
 				continue;
 #endif
@@ -58,7 +56,7 @@ void Grid::populateField() {
 }
 
 
-void Grid::print(){
+void Grid::print(bool clicked){
 #ifdef DEBUG
 	std::cout << "Grid with mines at:";
 	for (int i = 0; i < mineCoords.size(); ++i) {
@@ -93,7 +91,7 @@ void Grid::print(){
 			}
 			// Print tiles
 			Tile* t = field[r-1][c];
-			(*t).print();
+			(*t).print(clicked);
 		}
 		// Start a new line for the new row
 		std::cout << "\n";
@@ -196,6 +194,7 @@ int Grid::receiveUserInput(UserInput input) {
 	}
 }
 
+// TODO: what if neighboring tile with 0 neighboring mines is flagged?
 void Grid::clickTile(Tile* t) {
 	// First check if already clicked to prevent infinite loop
 	if (t->getClicked()) {
@@ -204,6 +203,8 @@ void Grid::clickTile(Tile* t) {
 	}
 	// Set clicked to true
 	t->setClicked(true);
+	// Update count
+	++this->tilesClicked;
 	// Check if the tile has any neigboring mines
 	int neighboringMines = t->getNeighboringMines();
 	if (neighboringMines == 0) {	// Tile has no neighboring mines
@@ -219,7 +220,14 @@ void Grid::clickTile(Tile* t) {
 			coord{c.row,c.col + 1},
 			coord{c.row - 1,c.col + 1}
 		};
+		int dims[2];
+		this->getGridSize(dims);
 		for (int i = 0; i < std::size(neighbors); ++i) {	// Loop through neighbors and click them
+			// Check if it's a valid coordinate
+			if (neighbors[i].col < 0 || neighbors[i].row < 0 || neighbors[i].row >= dims[0] || neighbors[i].col >= dims[1]) {
+				continue;
+			}
+			// Click that neighbor as well
 			this->clickTile(this->getTileAtCoord(neighbors[i]));
 		}
 	}
@@ -227,5 +235,13 @@ void Grid::clickTile(Tile* t) {
 
 // TODO: implement this
 bool Grid::checkGameWon() {
+	int dims[2];
+	this->getGridSize(dims);
+	// If count equals the total amount of non-mine tiles, the game is won
+	int tiles = (dims[0]*dims[1]) - this->getNumberOfMines();
+	if (tiles <= this->tilesClicked) {
+		return true;
+	}
+	// If not, game not won
 	return false;
 }

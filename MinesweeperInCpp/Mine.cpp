@@ -1,7 +1,7 @@
 #include "Tile.h"
 
-void Mine::print() {
-	if (getClicked()) {
+void Mine::print(bool clicked) {
+	if (getClicked() || clicked) {
 		std::cout << "|" << "O" << "|";
 	}
 	else if (getFlagged()) {

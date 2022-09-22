@@ -2,7 +2,7 @@
 #define GRID_H
 
 
-#define DEBUG
+//#define DEBUG
 
 #include <iostream>
 #include <vector>
@@ -23,8 +23,9 @@ enum class Level{
 // Grid class definition
 class Grid{
 private:
-	int flagsSet = 0;	// Amount of flags already set
-	Level difficulty;	// Difficulty level of the game
+	int tilesClicked = 0;	// Amount of non-mine tiles clicked
+	int flagsSet = 0;		// Amount of flags already set
+	Level difficulty;		// Difficulty level of the game
 	std::vector<coord> mineCoords;			// Vector with coordinates of the mines
 	std::vector<std::vector<Tile*>>	field;	// Vector with all the tiles including mines
 
@@ -57,9 +58,10 @@ public:
 #ifdef DEBUG
 		std::cout << "Entering Grid destructor\n";
 #endif // DEBUG
-
-		int dims[2];
+		// Print grid last time before destroying
+		this->print(true);
 		// Store grid size in dims variable
+		int dims[2];
 		getGridSize(dims);
 		// Clear all Tile ptrs
 		for (int r = 0; r < dims[0]; ++r) {	// Loop through rows
@@ -145,7 +147,7 @@ public:
 
 	void populateField();
 
-	void print();
+	void print(bool clicked = false);
 
 	bool coordIsMine(coord c);
 
