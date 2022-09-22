@@ -16,11 +16,13 @@ int main()
     std::cout << "              Hard (2)\n";
 
     // Init var to store input
-    int level{ 0 };
+    char level{ 0 };
     // Retrieve difficulty level
     do {
         std::cout << "Enter the level:";
         std::cin >> level;
+        // Convert to corresponding numerical value
+        level = level - '0';
     } while (level < 0 || level >= static_cast<int>(Level::MAX));
 
     // Init grid
@@ -29,24 +31,16 @@ int main()
     // Init loop var
     int res{ 0 };
     do {
-#ifndef DEBUG
         // Print the field
+#ifndef SHOW_TILES
         g.print();
-#endif // !DEBUG
-#ifdef DEBUG
-        // Print the field
+#endif // !SHOW_TILES
+#ifdef SHOW_TILES
         g.print(true);
-#endif // DEBUG
-
-
+#endif // SHOW_TILES
 
         // Retrieve user input
         UserInput input = getInput(g);
-#ifdef DEBUG
-        std::cout << "Returned input:";
-        std::cout << input;
-        std::cout << "\n";
-#endif // DEBUG
 
         // Pass input to grid
         res = g.receiveUserInput(input);
@@ -54,14 +48,16 @@ int main()
     } while (!res);   // res will be zero as long as game continues
 
     // Determine what final message to print
-    if (res == 1) {
-        std::cout << "Congrats! You won!\n";
-    }
-    else if (res == 2) {
-        std::cout << "Unfortunately, you exploded :'(\n";
-    }
-    else {
+    switch (res){
+    default:
         std::cout << "How the hell did this happen???\n";
+        break;
+    case 1:
+        std::cout << "Congrats! You won!\n";
+        break;
+    case 2:
+        std::cout << "Unfortunately, you exploded :'(\n";
+        break;
     }
     // Game over
 }

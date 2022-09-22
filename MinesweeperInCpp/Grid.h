@@ -3,6 +3,7 @@
 
 
 //#define DEBUG
+//#define SHOW_TILES
 
 #include <iostream>
 #include <vector>
@@ -52,7 +53,6 @@ public:
 		populateField();
 	}
 
-	// TODO: check if destructor works correctly
 	// Destructor
 	~Grid() {
 #ifdef DEBUG

@@ -34,7 +34,6 @@ void Grid::populateField() {
 				std::cout << "Added mine at:" << r << "," << c << "\n";
 				continue;
 #endif
-				// TODO: delete this memory
 				v.push_back(mPtr);
 			}
 			else {
@@ -47,7 +46,6 @@ void Grid::populateField() {
 				v.push_back(tPtr);
 				continue;
 #endif
-				// TODO: delete this memory
 				v.push_back(tPtr);
 			}
 		}
@@ -194,12 +192,18 @@ int Grid::receiveUserInput(UserInput input) {
 	}
 }
 
-// TODO: what if neighboring tile with 0 neighboring mines is flagged?
 void Grid::clickTile(Tile* t) {
 	// First check if already clicked to prevent infinite loop
 	if (t->getClicked()) {
 		// Exit function
 		return;
+	}
+	// If a flagged tile reaches this, it means that it was wrongly flagged
+	if (t->getFlagged()) {
+		// Erase flag
+		t->setFlagged(false);
+		coord c = t->getCoords();
+		std::cout << "Flag at " << c << " was wrong and is now removed.\n";
 	}
 	// Set clicked to true
 	t->setClicked(true);
@@ -233,7 +237,6 @@ void Grid::clickTile(Tile* t) {
 	}
 }
 
-// TODO: implement this
 bool Grid::checkGameWon() {
 	int dims[2];
 	this->getGridSize(dims);

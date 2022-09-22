@@ -14,7 +14,7 @@ bool operator==(coord& c1, coord& c2);
 
 
 // Overload to facilitate printing
-std::ostream& operator <<(std::ostream& out, coord& c);
+std::ostream& operator<<(std::ostream& out, coord& c);
 
 
 // Struct to pass input of user
