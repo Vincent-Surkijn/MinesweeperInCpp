@@ -80,7 +80,7 @@ public:
 	// Other functions
 	void print();
 
-	virtual bool isMine() {
+	bool isMine() {
 		return true;
 	}
 };

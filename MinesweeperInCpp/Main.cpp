@@ -45,6 +45,7 @@ int main()
 
     } while (!res);   // res will be zero as long as game continues
 
+    // Determine what final message to print
     if (res == 1) {
         std::cout << "Congrats! You won!\n";
     }

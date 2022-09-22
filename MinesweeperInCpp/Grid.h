@@ -24,7 +24,6 @@ enum class Level{
 class Grid{
 private:
 	int flagsSet = 0;	// Amount of flags already set
-	int clicks = 0;		// Amount of clicks done by user
 	Level difficulty;	// Difficulty level of the game
 	std::vector<coord> mineCoords;			// Vector with coordinates of the mines
 	std::vector<std::vector<Tile*>>	field;	// Vector with all the tiles including mines
@@ -52,14 +51,19 @@ public:
 		populateField();
 	}
 
+	// TODO: check if destructor works correctly
 	// Destructor
 	~Grid() {
+#ifdef DEBUG
+		std::cout << "Entering Grid destructor\n";
+#endif // DEBUG
+
 		int dims[2];
 		// Store grid size in dims variable
 		getGridSize(dims);
 		// Clear all Tile ptrs
-		for (int c = 0; c < dims[0]; ++c) {	// Loop through rows
-			for (int r = 0; r < dims[1]; ++r) {
+		for (int r = 0; r < dims[0]; ++r) {	// Loop through rows
+			for (int c = 0; c < dims[1]; ++c) {
 				delete(field[r][c]);
 			}
 			// Start a new line for the new row
@@ -121,12 +125,18 @@ public:
 			throw "Invalid Level Enum state @Grid.h:getNumberOfMines()";
 			break;
 		}
-	#ifdef DEBUG
-		std::cout << "Returning size:" << result[0] << "," << result[1] << "\n";
-	#endif
 	}
 
 	Tile* getTileAtCoord(coord c) {
+		// Check if coordinate is valid
+		int dims[2];
+		this->getGridSize(dims);
+		if (c.row < 0 || c.col < 0 || c.row >= dims[0] || c.col >= dims[1]) {
+			// If not valid, return empty Tile
+			Tile t = Tile();
+			Tile* tPtr = &t;
+			return tPtr;
+		}
 		return field[c.row][c.col];
 	}
 
@@ -147,6 +157,11 @@ public:
 	 * Returns 2 if game is lost
 	 */ 
 	int receiveUserInput(UserInput input);
+
+	void clickTile(Tile* t);
+
+	bool checkGameWon();
+
 };
 
 #endif // GRID_H

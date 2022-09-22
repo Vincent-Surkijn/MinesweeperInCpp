@@ -25,6 +25,8 @@ void Grid::populateField() {
 			// Check if it should be a normal Tile or a Mine
 			if (this->coordIsMine(coord{ r, c })) {
 				Mine m = Mine(coord{ r, c });
+				// Set its amount of neigboring mines
+				m.setNeighboringMines(this->countNeighboringMines(m.getCoords()));
 				Mine* mPtr = new(Mine);
 				*mPtr = m;
 #ifdef DEBUG
@@ -38,6 +40,8 @@ void Grid::populateField() {
 			}
 			else {
 				Tile t = Tile(coord{ r, c });
+				// Set its amount of neigboring mines
+				t.setNeighboringMines(this->countNeighboringMines(t.getCoords()));
 				Tile* tPtr = new(Tile);
 				*tPtr = t;
 #ifdef DEBUG
@@ -111,12 +115,12 @@ int Grid::countNeighboringMines(coord c) {
 	coord neighbors[8]{
 		coord{row-1, col-1},
 		coord{row-1, col},
-		coord{row-1, col-1},
 		coord{row, col-1},
 		coord{row+1,col-1},
 		coord{row+1,col},
 		coord{row+1,col+1},
-		coord{row,col+1}
+		coord{row,col+1},
+		coord{row-1,col+1}
 	};
 	// Count how many neighbors are mines
 	int count = 0;
@@ -129,7 +133,6 @@ int Grid::countNeighboringMines(coord c) {
 	return count;
 }
 
-// TODO: continue working on this function
 int Grid::receiveUserInput(UserInput input) {
 	// First check which action was inputted
 	if (input.act == 'f') {	// Action = flagging
@@ -141,6 +144,12 @@ int Grid::receiveUserInput(UserInput input) {
 		}
 		// Retrieve selected Tile
 		Tile* t = this->getTileAtCoord(input.c);
+		// Check if tile was clicked
+		if (t->getClicked()) {
+			std::cout << "You can't flag a clicked tile!\n";
+			// Game continues
+			return 0;
+		}
 		// Check its previous flagged state
 		if (t->getFlagged()) {	// Was already flagged
 			// Update state
@@ -166,9 +175,57 @@ int Grid::receiveUserInput(UserInput input) {
 			// Game continues
 			return 0;
 		}
+		if (t->getFlagged()) {
+			std::cout << "You can't click a flagged tile!\n";
+			// Game continues
+			return 0;
+		}
 		if (t->isMine()) {	// Clicked a mine
 			// Game is lost
 			return 2;
 		}
+		// Click the tile
+		this->clickTile(t);
+		// Check if the game is won
+		if (this->checkGameWon()) {
+			// Game is won
+			return 1;
+		}
+		// Game continues
+		return 0;
 	}
+}
+
+void Grid::clickTile(Tile* t) {
+	// First check if already clicked to prevent infinite loop
+	if (t->getClicked()) {
+		// Exit function
+		return;
+	}
+	// Set clicked to true
+	t->setClicked(true);
+	// Check if the tile has any neigboring mines
+	int neighboringMines = t->getNeighboringMines();
+	if (neighboringMines == 0) {	// Tile has no neighboring mines
+		// Click all (non diagonal) neighboring tiles as well
+		coord c = t->getCoords();	// Get coordinates of current tile
+		coord neighbors[]{			// Define all its (non diagonal) neighboring tiles
+			coord{c.row - 1, c.col - 1},
+			coord{c.row - 1, c.col},
+			coord{c.row, c.col - 1},
+			coord{c.row + 1,c.col - 1},
+			coord{c.row + 1,c.col},
+			coord{c.row + 1,c.col + 1},
+			coord{c.row,c.col + 1},
+			coord{c.row - 1,c.col + 1}
+		};
+		for (int i = 0; i < std::size(neighbors); ++i) {	// Loop through neighbors and click them
+			this->clickTile(this->getTileAtCoord(neighbors[i]));
+		}
+	}
+}
+
+// TODO: implement this
+bool Grid::checkGameWon() {
+	return false;
 }
